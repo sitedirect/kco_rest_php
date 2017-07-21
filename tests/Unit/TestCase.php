@@ -22,7 +22,7 @@ namespace Klarna\Rest\Tests\Unit;
 /**
  * Base unit test case class.
  */
-class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \GuzzleHttp\Message\RequestInterface
@@ -44,10 +44,10 @@ class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->request = $this->getMockBuilder('GuzzleHttp\Message\RequestInterface')
+        $this->request = $this->getMockBuilder('Psr\Http\Message\RequestInterface')
             ->getMock();
 
-        $this->response = $this->getMockBuilder('GuzzleHttp\Message\ResponseInterface')
+        $this->response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')
             ->getMock();
 
         $this->connector = $this->getMockBuilder('Klarna\Rest\Transport\Connector')

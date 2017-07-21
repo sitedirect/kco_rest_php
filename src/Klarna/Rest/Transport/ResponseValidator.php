@@ -19,7 +19,7 @@
 
 namespace Klarna\Rest\Transport;
 
-use GuzzleHttp\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * HTTP response validator helper class.
@@ -116,7 +116,11 @@ class ResponseValidator
      */
     public function getJson()
     {
-        return $this->response->json();
+        $data = json_decode($this->response->getBody(), true);
+        if ($error = json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException('Unable to parse response body into JSON: ' . $error);
+        }
+        return $data === null ? array() : $data;
     }
 
     /**
