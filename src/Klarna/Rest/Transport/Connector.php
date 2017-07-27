@@ -104,7 +104,7 @@ class Connector implements ConnectorInterface
         $options['auth'] = [$this->merchantId, $this->sharedSecret];
         $options['headers']['User-Agent'] = strval($this->userAgent);
 
-        return $this->client->createRequest($method, $url, $options);
+        return $this->client->request($method, $url, $options);
     }
 
     /**
@@ -133,7 +133,7 @@ class Connector implements ConnectorInterface
                 throw $e;
             }
 
-            $data = $response->json();
+            $data = json_decode($response->getBody(), true);
 
             if (!is_array($data) || !array_key_exists('error_code', $data)) {
                 throw $e;

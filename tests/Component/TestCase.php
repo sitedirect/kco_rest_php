@@ -20,15 +20,15 @@
 namespace Klarna\Rest\Tests\Component;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Subscriber\History;
-use GuzzleHttp\Subscriber\Mock;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Middleware;
 use Klarna\Rest\Transport\Connector;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Base component test case class.
  */
-class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     const MERCHANT_ID = '1234';
 
@@ -64,8 +64,8 @@ class TestCase extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->client = new Client();
-        $this->mock = new Mock();
-        $this->history = new History();
+        $this->mock = new MockHandler();
+        $this->history = Middleware::history(new \ArrayObject());
 
         // Add the mock subscriber to the client.
         $this->client->getEmitter()->attach($this->mock);

@@ -25,12 +25,12 @@ namespace Klarna\Rest\Tests\Unit;
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \GuzzleHttp\Message\RequestInterface
+     * @var \Psr\Http\Message\RequestInterface
      */
     protected $response;
 
     /**
-     * @var \GuzzleHttp\Message\ResponseInterface
+     * @var \Psr\Http\Message\ResponseInterface
      */
     protected $request;
 
