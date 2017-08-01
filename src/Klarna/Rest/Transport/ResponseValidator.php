@@ -96,7 +96,7 @@ class ResponseValidator
             throw new \RuntimeException('Response is missing a Content-Type header');
         }
 
-        $contentType = $this->response->getHeader('Content-Type');
+        $contentType = $this->response->getHeaderLine('Content-Type');
         if ($contentType !== $mediaType) {
             throw new \RuntimeException(
                 "Unexpected Content-Type header received: {$contentType}"
@@ -136,6 +136,6 @@ class ResponseValidator
             throw new \RuntimeException('Response is missing a Location header');
         }
 
-        return $this->response->getHeader('Location');
+        return $this->response->getHeaderLine('Location');
     }
 }

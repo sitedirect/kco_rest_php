@@ -19,6 +19,7 @@
 
 namespace Klarna\Rest\Transport;
 
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
@@ -97,32 +98,20 @@ class Connector implements ConnectorInterface
      * @param string $method  HTTP method
      * @param array  $options Request options
      *
-     * @return RequestInterface
-     */
-    public function createRequest($url, $method = 'GET', array $options = [])
-    {
-        $options['auth'] = [$this->merchantId, $this->sharedSecret];
-        $options['headers']['User-Agent'] = strval($this->userAgent);
-
-        return $this->client->request($method, $url, $options);
-    }
-
-    /**
-     * Sends the request.
-     *
-     * @param RequestInterface $request Request to send
-     *
      * @throws ConnectorException If the API returned an error response
      * @throws RequestException   When an error is encountered
      * @throws \LogicException    When the adapter does not populate a response
      *
      * @return ResponseInterface
      */
-    public function send(RequestInterface $request)
+    public function createRequest($url, $method = 'GET', array $options = [])
     {
+        $options['auth'] = [$this->merchantId, $this->sharedSecret];
+        $options['headers']['User-Agent'] = strval($this->userAgent);
+
         try {
-            return $this->client->send($request);
-        } catch (RequestException $e) {
+            return $this->client->request($method, $url, $options);
+        } catch (RequestException $e) { 
             if (!$e->hasResponse()) {
                 throw $e;
             }
