@@ -19,8 +19,8 @@
 
 namespace Klarna\Rest\Tests\Component\Transport;
 
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Psr7\Response;
 use Klarna\Rest\Transport\Connector;
 use Klarna\Rest\Tests\Component\TestCase;
 
@@ -59,25 +59,11 @@ class ConnectorTest extends TestCase
     }
 
     /**
-     * Make sure that the request sent returns an response.
-     *
-     * @return void
-     */
-    public function testSend()
-    {
-        $response = new Response(200);
-        $this->mock->addResponse($response);
-
-        $request = $this->connector->createRequest('http://somewhere/path', 'POST');
-        $this->assertSame($response, $this->connector->send($request));
-    }
-
-    /**
      * Make sure that an API error response throws a connector exception.
      *
      * @return void
      */
-    public function testSendError()
+    public function testCreateRequestError()
     {
         $json = <<<JSON
 {
@@ -92,17 +78,16 @@ JSON;
         $response = new Response(
             500,
             ['Content-Type' => 'application/json'],
-            Stream::factory($json)
+            Psr7\stream_for($json)
         );
-        $this->mock->addResponse($response);
+        $this->mock->append($response);
 
         $this->setExpectedException(
             'Klarna\Rest\Transport\Exception\ConnectorException',
             'ERR_1: msg1, msg2 (#cid_1)'
         );
 
-        $request = $this->connector->createRequest('http://somewhere/path', 'POST');
-        $this->connector->send($request);
+        $this->connector->createRequest('http://somewhere/path', 'POST');
     }
 
     /**
@@ -110,15 +95,14 @@ JSON;
      *
      * @return void
      */
-    public function testSendGuzzleError()
+    public function testCreateRequestGuzzleError()
     {
         $response = new Response(404);
-        $this->mock->addResponse($response);
+        $this->mock->append($response);
 
         $this->setExpectedException('GuzzleHttp\Exception\ClientException');
 
-        $request = $this->connector->createRequest('http://somewhere/path', 'POST');
-        $this->connector->send($request);
+        $this->connector->createRequest('http://somewhere/path', 'POST');
     }
 
     /**
