@@ -189,7 +189,7 @@ JSON;
             $request->getUri()->getPath()
         );
 
-        $this->assertEquals('application/json', $request->getHeader('Content-Type'));
+        $this->assertEquals('application/json', $request->getHeaderLine('Content-Type'));
         $this->assertEquals('{"data":"sent in"}', strval($request->getBody()));
 
         $this->assertAuthorization($request);
@@ -214,7 +214,7 @@ JSON;
             $request->getUri()->getPath()
         );
 
-        $this->assertEquals('application/json', $request->getHeader('Content-Type'));
+        $this->assertEquals('application/json', $request->getHeaderLine('Content-Type'));
         $this->assertEquals('{"data":"sent in"}', strval($request->getBody()));
 
         $this->assertAuthorization($request);
@@ -239,7 +239,7 @@ JSON;
             $request->getUri()->getPath()
         );
 
-        $this->assertEquals('application/json', $request->getHeader('Content-Type'));
+        $this->assertEquals('application/json', $request->getHeaderLine('Content-Type'));
         $this->assertEquals('{"data":"sent in"}', strval($request->getBody()));
 
         $this->assertAuthorization($request);
@@ -264,7 +264,7 @@ JSON;
             $request->getUri()->getPath()
         );
 
-        $this->assertEquals('application/json', $request->getHeader('Content-Type'));
+        $this->assertEquals('application/json', $request->getHeaderLine('Content-Type'));
         $this->assertEquals('{"data":"sent in"}', strval($request->getBody()));
 
         $this->assertAuthorization($request);
@@ -289,7 +289,7 @@ JSON;
             $request->getUri()->getPath()
         );
 
-        $this->assertEquals('application/json', $request->getHeader('Content-Type'));
+        $this->assertEquals('application/json', $request->getHeaderLine('Content-Type'));
         $this->assertEquals('{"data":"sent in"}', strval($request->getBody()));
 
         $this->assertAuthorization($request);
@@ -320,7 +320,7 @@ JSON;
             $request->getUri()->getPath()
         );
 
-        $this->assertEquals('application/json', $request->getHeader('Content-Type'));
+        $this->assertEquals('application/json', $request->getHeaderLine('Content-Type'));
         $this->assertEquals('{"data":"goes here"}', strval($request->getBody()));
 
         $this->assertAuthorization($request);

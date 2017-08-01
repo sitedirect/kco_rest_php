@@ -30,35 +30,6 @@ use Klarna\Rest\Tests\Component\TestCase;
 class ConnectorTest extends TestCase
 {
     /**
-     * Make sure the request is created properly.
-     *
-     * @return void
-     */
-    public function testCreateRequest()
-    {
-        $request = $this->connector->createRequest(
-            'https://localhost:8888/path-here',
-            'POST',
-            ['query' => ['q' => '1']]
-        );
-
-        $this->assertInstanceOf('GuzzleHttp\Message\RequestInterface', $request);
-        $this->assertEquals('POST', $request->getMethod());
-        $this->assertEquals(
-            'https://localhost:8888/path-here?q=1',
-            $request->getUrl()
-        );
-
-        $this->assertEquals(self::MERCHANT_ID, $request->getConfig()['auth'][0]);
-        $this->assertEquals(self::SHARED_SECRET, $request->getConfig()['auth'][1]);
-
-        $this->assertEquals(
-            strval($this->connector->getUserAgent()),
-            $request->getHeader('User-Agent')
-        );
-    }
-
-    /**
      * Make sure that an API error response throws a connector exception.
      *
      * @return void
@@ -123,6 +94,5 @@ JSON;
         );
 
         $this->assertSame($userAgent, $connector->getUserAgent());
-        $this->assertEquals(self::BASE_URL, $connector->getClient()->getBaseUrl());
     }
 }

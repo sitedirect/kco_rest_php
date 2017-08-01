@@ -118,7 +118,7 @@ class Connector implements ConnectorInterface
 
             $response = $e->getResponse();
 
-            if ($response->getHeader('Content-Type') !== 'application/json') {
+            if ($response->getHeaderLine('Content-Type') !== 'application/json') {
                 throw $e;
             }
 

@@ -62,11 +62,6 @@ class OrderTest extends TestCase
                 'POST',
                 ['json' => $data]
             )
-            ->will($this->returnValue($this->request));
-
-        $this->connector->expects($this->once())
-            ->method('send')
-            ->with($this->request)
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -79,7 +74,7 @@ class OrderTest extends TestCase
             ->will($this->returnValue(true));
 
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Location')
             ->will($this->returnValue('http://somewhere/a-path'));
 
@@ -99,11 +94,6 @@ class OrderTest extends TestCase
     {
         $this->connector->expects($this->once())
             ->method('createRequest')
-            ->will($this->returnValue($this->request));
-
-        $this->connector->expects($this->once())
-            ->method('send')
-            ->with($this->request)
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -129,11 +119,6 @@ class OrderTest extends TestCase
     {
         $this->connector->expects($this->once())
             ->method('createRequest')
-            ->will($this->returnValue($this->request));
-
-        $this->connector->expects($this->once())
-            ->method('send')
-            ->with($this->request)
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -171,11 +156,6 @@ class OrderTest extends TestCase
                 'POST',
                 ['json' => $updateData]
             )
-            ->will($this->returnValue($this->request));
-
-        $this->connector->expects($this->once())
-            ->method('send')
-            ->with($this->request)
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -188,7 +168,7 @@ class OrderTest extends TestCase
             ->will($this->returnValue(true));
 
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue('application/json'));
 
@@ -198,8 +178,8 @@ class OrderTest extends TestCase
         ];
 
         $this->response->expects($this->once())
-            ->method('json')
-            ->will($this->returnValue($data));
+            ->method('getBody')
+            ->will($this->returnValue(json_encode($data)));
 
         $order = new Order($this->connector, '12345');
         $order['order_id'] = '12345';
@@ -220,11 +200,6 @@ class OrderTest extends TestCase
     {
         $this->connector->expects($this->once())
             ->method('createRequest')
-            ->will($this->returnValue($this->request));
-
-        $this->connector->expects($this->once())
-            ->method('send')
-            ->with($this->request)
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -250,11 +225,6 @@ class OrderTest extends TestCase
     {
         $this->connector->expects($this->once())
             ->method('createRequest')
-            ->will($this->returnValue($this->request));
-
-        $this->connector->expects($this->once())
-            ->method('send')
-            ->with($this->request)
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -267,7 +237,7 @@ class OrderTest extends TestCase
             ->will($this->returnValue(true));
 
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue('text/plain'));
 
@@ -295,11 +265,6 @@ class OrderTest extends TestCase
                 'GET',
                 []
             )
-            ->will($this->returnValue($this->request));
-
-        $this->connector->expects($this->once())
-            ->method('send')
-            ->with($this->request)
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -312,7 +277,7 @@ class OrderTest extends TestCase
             ->will($this->returnValue(true));
 
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue('application/json'));
 
@@ -322,8 +287,8 @@ class OrderTest extends TestCase
         ];
 
         $this->response->expects($this->once())
-            ->method('json')
-            ->will($this->returnValue($data));
+            ->method('getBody')
+            ->will($this->returnValue(json_encode($data)));
 
         $order = new Order($this->connector, '12345');
         $order['data'] = 'is overwritten';
@@ -348,11 +313,6 @@ class OrderTest extends TestCase
                 'GET',
                 []
             )
-            ->will($this->returnValue($this->request));
-
-        $this->connector->expects($this->once())
-            ->method('send')
-            ->with($this->request)
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -384,11 +344,6 @@ class OrderTest extends TestCase
                 'GET',
                 []
             )
-            ->will($this->returnValue($this->request));
-
-        $this->connector->expects($this->once())
-            ->method('send')
-            ->with($this->request)
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -401,7 +356,7 @@ class OrderTest extends TestCase
             ->will($this->returnValue(true));
 
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue('text/plain'));
 

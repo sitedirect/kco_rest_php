@@ -133,7 +133,7 @@ class ConnectorTest extends TestCase
     public function testCreateRequestConnectorExceptionNoJson()
     {
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue(''));
 
@@ -165,7 +165,7 @@ class ConnectorTest extends TestCase
     public function testCreateRequestConnectorExceptionEmptyJson()
     {
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue('application/json'));
 
@@ -196,7 +196,7 @@ class ConnectorTest extends TestCase
     public function testCreateRequestConnectorExceptionMissingFields()
     {
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue('application/json'));
 
@@ -233,7 +233,7 @@ class ConnectorTest extends TestCase
     public function testCreateRequestConnectorException()
     {
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue('application/json'));
 
