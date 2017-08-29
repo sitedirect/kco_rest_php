@@ -56,7 +56,7 @@ class OrderTest extends TestCase
         $data = ['data' => 'goes here'];
 
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/checkout/v3/orders',
                 'POST',
@@ -93,7 +93,7 @@ class OrderTest extends TestCase
     public function testCreateInvalidStatusCode()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -118,7 +118,7 @@ class OrderTest extends TestCase
     public function testCreateNoLocation()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -150,7 +150,7 @@ class OrderTest extends TestCase
         $updateData = ['data' => 'goes here'];
 
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/checkout/v3/orders/12345',
                 'POST',
@@ -199,7 +199,7 @@ class OrderTest extends TestCase
     public function testUpdateInvalidStatusCode()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -224,7 +224,7 @@ class OrderTest extends TestCase
     public function testUpdateNotJson()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -259,7 +259,7 @@ class OrderTest extends TestCase
     public function testFetch()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/checkout/v3/orders/12345',
                 'GET',
@@ -307,7 +307,7 @@ class OrderTest extends TestCase
     public function testFetchInvalidStatusCode()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/checkout/v3/orders/12345',
                 'GET',
@@ -338,7 +338,7 @@ class OrderTest extends TestCase
     public function testFetchNotJson()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/checkout/v3/orders/12345',
                 'GET',

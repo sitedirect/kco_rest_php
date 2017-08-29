@@ -74,7 +74,7 @@ class CaptureTest extends TestCase
     public function testFetch()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/orders/1/captures/2',
                 'GET',
@@ -122,7 +122,7 @@ class CaptureTest extends TestCase
     public function testFetchInvalidStatusCode()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/orders/1/captures/2',
                 'GET',
@@ -153,7 +153,7 @@ class CaptureTest extends TestCase
     public function testFetchNotJson()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/orders/1/captures/2',
                 'GET',
@@ -196,7 +196,7 @@ class CaptureTest extends TestCase
         $data = ['data' => 'goes here'];
 
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/orders/1/captures',
                 'POST',
@@ -233,7 +233,7 @@ class CaptureTest extends TestCase
     public function testCreateInvalidStatusCode()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -258,7 +258,7 @@ class CaptureTest extends TestCase
     public function testCreateNoLocation()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->will($this->returnValue($this->response));
 
         $this->response->expects($this->once())
@@ -290,7 +290,7 @@ class CaptureTest extends TestCase
         $data = ['data' => 'goes here'];
 
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/orders/1/captures/2/shipping-info',
                 'POST',
@@ -316,7 +316,7 @@ class CaptureTest extends TestCase
         $data = ['data' => 'goes here'];
 
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/orders/1/captures/2/shipping-info',
                 'POST',
@@ -348,7 +348,7 @@ class CaptureTest extends TestCase
         $data = ['data' => 'goes here'];
 
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/orders/1/captures/2/customer-details',
                 'PATCH',
@@ -374,7 +374,7 @@ class CaptureTest extends TestCase
         $data = ['data' => 'goes here'];
 
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/orders/1/captures/2/customer-details',
                 'PATCH',
@@ -404,7 +404,7 @@ class CaptureTest extends TestCase
     public function testTriggerSendout()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/orders/1/captures/2/trigger-send-out',
                 'POST',
@@ -428,7 +428,7 @@ class CaptureTest extends TestCase
     public function testTriggerSendoutInvalidStatusCode()
     {
         $this->connector->expects($this->once())
-            ->method('createRequest')
+            ->method('request')
             ->with(
                 '/orders/1/captures/2/trigger-send-out',
                 'POST',

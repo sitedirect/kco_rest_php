@@ -88,14 +88,14 @@ class ConnectorTest extends TestCase
      *
      * @return void
      */
-    public function testCreateRequest()
+    public function testRequest()
     {
         $this->client->expects($this->any())
             ->method('request')
             ->with('method', 'uri', $this->options)
             ->will($this->returnValue($this->response));
 
-        $response = $this->object->createRequest('uri', 'method', ['opt' => 'val']);
+        $response = $this->object->request('uri', 'method', ['opt' => 'val']);
         $this->assertSame($this->response, $response);
     }
 
@@ -105,7 +105,7 @@ class ConnectorTest extends TestCase
      *
      * @return void
      */
-    public function testCreateRequestRequestException()
+    public function testRequestRequestException()
     {
         $exception = new RequestException(
             'Something went terribly wrong',
@@ -122,7 +122,7 @@ class ConnectorTest extends TestCase
             'Something went terribly wrong'
         );
 
-        $this->object->createRequest('uri', 'method', ['opt' => 'val']);
+        $this->object->request('uri', 'method', ['opt' => 'val']);
     }
 
     /**
@@ -130,7 +130,7 @@ class ConnectorTest extends TestCase
      *
      * @return void
      */
-    public function testCreateRequestConnectorExceptionNoJson()
+    public function testRequestConnectorExceptionNoJson()
     {
         $this->response->expects($this->once())
             ->method('getHeaderLine')
@@ -153,7 +153,7 @@ class ConnectorTest extends TestCase
             'Something went terribly wrong'
         );
 
-        $this->object->createRequest('uri', 'method', ['opt' => 'val']);
+        $this->object->request('uri', 'method', ['opt' => 'val']);
     }
 
     /**
@@ -162,7 +162,7 @@ class ConnectorTest extends TestCase
      *
      * @return void
      */
-    public function testCreateRequestConnectorExceptionEmptyJson()
+    public function testRequestConnectorExceptionEmptyJson()
     {
         $this->response->expects($this->once())
             ->method('getHeaderLine')
@@ -185,7 +185,7 @@ class ConnectorTest extends TestCase
             'Something went terribly wrong'
         );
 
-        $this->object->createRequest('uri', 'method', ['opt' => 'val']);
+        $this->object->request('uri', 'method', ['opt' => 'val']);
     }
 
     /**
@@ -193,7 +193,7 @@ class ConnectorTest extends TestCase
      *
      * @return void
      */
-    public function testCreateRequestConnectorExceptionMissingFields()
+    public function testRequestConnectorExceptionMissingFields()
     {
         $this->response->expects($this->once())
             ->method('getHeaderLine')
@@ -222,7 +222,7 @@ class ConnectorTest extends TestCase
             'Something went terribly wrong'
         );
 
-        $this->object->createRequest('uri', 'method', ['opt' => 'val']);
+        $this->object->request('uri', 'method', ['opt' => 'val']);
     }
 
     /**
@@ -230,7 +230,7 @@ class ConnectorTest extends TestCase
      *
      * @return void
      */
-    public function testCreateRequestConnectorException()
+    public function testRequestConnectorException()
     {
         $this->response->expects($this->once())
             ->method('getHeaderLine')
@@ -266,7 +266,7 @@ class ConnectorTest extends TestCase
             'ERROR_CODE_1: Oh dear..., Oh no... (#corr_id_1)'
         );
 
-        $this->object->createRequest('uri', 'method', ['opt' => 'val']);
+        $this->object->request('uri', 'method', ['opt' => 'val']);
     }
 
     /**

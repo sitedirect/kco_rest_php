@@ -138,7 +138,7 @@ abstract class Resource extends \ArrayObject
      */
     protected function request($method, $url, array $options = [])
     {
-        return new ResponseValidator($this->connector->createRequest($url, $method, $options));
+        return new ResponseValidator($this->connector->request($url, $method, $options));
     }
 
     /**

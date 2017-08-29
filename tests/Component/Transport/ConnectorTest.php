@@ -34,7 +34,7 @@ class ConnectorTest extends TestCase
      *
      * @return void
      */
-    public function testCreateRequestError()
+    public function testRequestError()
     {
         $json = <<<JSON
 {
@@ -58,7 +58,7 @@ JSON;
             'ERR_1: msg1, msg2 (#cid_1)'
         );
 
-        $this->connector->createRequest('http://somewhere/path', 'POST');
+        $this->connector->request('http://somewhere/path', 'POST');
     }
 
     /**
@@ -66,14 +66,14 @@ JSON;
      *
      * @return void
      */
-    public function testCreateRequestGuzzleError()
+    public function testRequestGuzzleError()
     {
         $response = new Response(404);
         $this->mock->append($response);
 
         $this->setExpectedException('GuzzleHttp\Exception\ClientException');
 
-        $this->connector->createRequest('http://somewhere/path', 'POST');
+        $this->connector->request('http://somewhere/path', 'POST');
     }
 
     /**

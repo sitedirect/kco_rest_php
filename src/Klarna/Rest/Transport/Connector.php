@@ -104,7 +104,7 @@ class Connector implements ConnectorInterface
      *
      * @return ResponseInterface
      */
-    public function createRequest($url, $method = 'GET', array $options = [])
+    public function request($url, $method = 'GET', array $options = [])
     {
         $options['auth'] = [$this->merchantId, $this->sharedSecret];
         $options['headers']['User-Agent'] = strval($this->userAgent);

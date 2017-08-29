@@ -63,7 +63,7 @@ interface ConnectorInterface
      *
      * @return ResponseInterface
      */
-    public function createRequest($url, $method = 'GET', array $options = []);
+    public function request($url, $method = 'GET', array $options = []);
 
     /**
      * Gets the HTTP transport client.
