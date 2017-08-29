@@ -122,6 +122,9 @@ class Connector implements ConnectorInterface
             }
 
             $data = json_decode($response->getBody(), true);
+            if ($error = json_last_error() !== JSON_ERROR_NONE) {
+                throw new \RuntimeException('Unable to parse response body into JSON: ' . $error);
+            }
 
             if (!is_array($data) || !array_key_exists('error_code', $data)) {
                 throw $e;
