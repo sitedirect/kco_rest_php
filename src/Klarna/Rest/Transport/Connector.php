@@ -19,7 +19,6 @@
 
 namespace Klarna\Rest\Transport;
 
-use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;

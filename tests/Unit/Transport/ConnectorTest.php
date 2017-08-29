@@ -38,6 +38,11 @@ class ConnectorTest extends TestCase
     const PATH = '/test/url';
 
     /**
+     * @var array
+     */
+    protected $options;
+
+    /**
      * @var Connector
      */
     protected $object;
