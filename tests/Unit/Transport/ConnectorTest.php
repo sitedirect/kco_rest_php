@@ -38,6 +38,11 @@ class ConnectorTest extends TestCase
     const PATH = '/test/url';
 
     /**
+     * @var array
+     */
+    protected $options;
+
+    /**
      * @var Connector
      */
     protected $object;
@@ -58,6 +63,12 @@ class ConnectorTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
+
+        $this->options = [
+            'opt' => 'val',
+            'auth' => [self::MERCHANT_ID, self::SHARED_SECRET],
+            'headers' => ['User-Agent' => 'a-user-agent']
+        ];
 
         $this->client = $this->getMockBuilder('GuzzleHttp\ClientInterface')
             ->getMock();
@@ -82,46 +93,24 @@ class ConnectorTest extends TestCase
      *
      * @return void
      */
-    public function testCreateRequest()
+    public function testRequest()
     {
-        $options = [
-            'opt' => 'val',
-            'auth' => [self::MERCHANT_ID, self::SHARED_SECRET],
-            'headers' => ['User-Agent' => 'a-user-agent']
-        ];
-
         $this->client->expects($this->any())
-            ->method('createRequest')
-            ->with('uri', 'method', $options)
-            ->will($this->returnValue($this->request));
-
-        $request = $this->object->createRequest('method', 'uri', ['opt' => 'val']);
-        $this->assertSame($this->request, $request);
-    }
-
-    /**
-     * Make sure that the request is sent and a response is returned.
-     *
-     * @return void
-     */
-    public function testSend()
-    {
-        $this->client->expects($this->once())
-            ->method('send')
-            ->with($this->request)
+            ->method('request')
+            ->with('method', 'uri', $this->options)
             ->will($this->returnValue($this->response));
 
-        $response = $this->object->send($this->request);
-
+        $response = $this->object->request('uri', 'method', ['opt' => 'val']);
         $this->assertSame($this->response, $response);
     }
+
 
     /**
      * Make sure that an exception without a response is re-thrown.
      *
      * @return void
      */
-    public function testSendRequestException()
+    public function testRequestRequestException()
     {
         $exception = new RequestException(
             'Something went terribly wrong',
@@ -129,8 +118,8 @@ class ConnectorTest extends TestCase
         );
 
         $this->client->expects($this->once())
-            ->method('send')
-            ->with($this->request)
+            ->method('request')
+            ->with('method', 'uri', $this->options)
             ->will($this->throwException($exception));
 
         $this->setExpectedException(
@@ -138,7 +127,7 @@ class ConnectorTest extends TestCase
             'Something went terribly wrong'
         );
 
-        $this->object->send($this->request);
+        $this->object->request('uri', 'method', ['opt' => 'val']);
     }
 
     /**
@@ -146,10 +135,10 @@ class ConnectorTest extends TestCase
      *
      * @return void
      */
-    public function testSendConnectorExceptionNoJson()
+    public function testRequestConnectorExceptionNoJson()
     {
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue(''));
 
@@ -160,8 +149,8 @@ class ConnectorTest extends TestCase
         );
 
         $this->client->expects($this->once())
-            ->method('send')
-            ->with($this->request)
+            ->method('request')
+            ->with('method', 'uri', $this->options)
             ->will($this->throwException($exception));
 
         $this->setExpectedException(
@@ -169,7 +158,7 @@ class ConnectorTest extends TestCase
             'Something went terribly wrong'
         );
 
-        $this->object->send($this->request);
+        $this->object->request('uri', 'method', ['opt' => 'val']);
     }
 
     /**
@@ -178,10 +167,10 @@ class ConnectorTest extends TestCase
      *
      * @return void
      */
-    public function testSendConnectorExceptionEmptyJson()
+    public function testRequestConnectorExceptionEmptyJson()
     {
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue('application/json'));
 
@@ -192,8 +181,8 @@ class ConnectorTest extends TestCase
         );
 
         $this->client->expects($this->once())
-            ->method('send')
-            ->with($this->request)
+            ->method('request')
+            ->with('method', 'uri', $this->options)
             ->will($this->throwException($exception));
 
         $this->setExpectedException(
@@ -201,7 +190,7 @@ class ConnectorTest extends TestCase
             'Something went terribly wrong'
         );
 
-        $this->object->send($this->request);
+        $this->object->request('uri', 'method', ['opt' => 'val']);
     }
 
     /**
@@ -209,18 +198,18 @@ class ConnectorTest extends TestCase
      *
      * @return void
      */
-    public function testSendConnectorExceptionMissingFields()
+    public function testRequestConnectorExceptionMissingFields()
     {
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue('application/json'));
 
         $data = [];
 
         $this->response->expects($this->once())
-            ->method('json')
-            ->will($this->returnValue($data));
+            ->method('getBody')
+            ->will($this->returnValue(json_encode($data)));
 
         $exception = new RequestException(
             'Something went terribly wrong',
@@ -229,8 +218,8 @@ class ConnectorTest extends TestCase
         );
 
         $this->client->expects($this->once())
-            ->method('send')
-            ->with($this->request)
+            ->method('request')
+            ->with('method', 'uri', $this->options)
             ->will($this->throwException($exception));
 
         $this->setExpectedException(
@@ -238,7 +227,7 @@ class ConnectorTest extends TestCase
             'Something went terribly wrong'
         );
 
-        $this->object->send($this->request);
+        $this->object->request('uri', 'method', ['opt' => 'val']);
     }
 
     /**
@@ -246,10 +235,10 @@ class ConnectorTest extends TestCase
      *
      * @return void
      */
-    public function testSendConnectorException()
+    public function testRequestConnectorException()
     {
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue('application/json'));
 
@@ -263,8 +252,8 @@ class ConnectorTest extends TestCase
         ];
 
         $this->response->expects($this->once())
-            ->method('json')
-            ->will($this->returnValue($data));
+            ->method('getBody')
+            ->will($this->returnValue(json_encode($data)));
 
         $exception = new RequestException(
             'Something went terribly wrong',
@@ -273,8 +262,8 @@ class ConnectorTest extends TestCase
         );
 
         $this->client->expects($this->once())
-            ->method('send')
-            ->with($this->request)
+            ->method('request')
+            ->with('method', 'uri', $this->options)
             ->will($this->throwException($exception));
 
         $this->setExpectedException(
@@ -282,7 +271,7 @@ class ConnectorTest extends TestCase
             'ERROR_CODE_1: Oh dear..., Oh no... (#corr_id_1)'
         );
 
-        $this->object->send($this->request);
+        $this->object->request('uri', 'method', ['opt' => 'val']);
     }
 
     /**
@@ -301,9 +290,7 @@ class ConnectorTest extends TestCase
 
         $client = $connector->getClient();
         $this->assertInstanceOf('GuzzleHttp\ClientInterface', $client);
-
-        $this->assertEquals(self::BASE_URL, $client->getBaseUrl());
-
+        
         $userAgent = $connector->getUserAgent();
 
         $this->assertSame($this->userAgent, $userAgent);

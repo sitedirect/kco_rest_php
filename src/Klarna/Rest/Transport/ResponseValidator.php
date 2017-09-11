@@ -96,7 +96,7 @@ class ResponseValidator
             throw new \RuntimeException('Response is missing a Content-Type header');
         }
 
-        $contentType = $this->response->getHeader('Content-Type');
+        $contentType = $this->response->getHeaderLine('Content-Type');
         if ($contentType !== $mediaType) {
             throw new \RuntimeException(
                 "Unexpected Content-Type header received: {$contentType}"
@@ -116,7 +116,11 @@ class ResponseValidator
      */
     public function getJson()
     {
-        return $this->response->json();
+        $data = json_decode($this->response->getBody(), true);
+        if ($error = json_last_error() !== JSON_ERROR_NONE) {
+            throw new \RuntimeException('Unable to parse response body into JSON: ' . $error);
+        }
+        return $data === null ? array() : $data;
     }
 
     /**
@@ -132,6 +136,6 @@ class ResponseValidator
             throw new \RuntimeException('Response is missing a Location header');
         }
 
-        return $this->response->getHeader('Location');
+        return $this->response->getHeaderLine('Location');
     }
 }

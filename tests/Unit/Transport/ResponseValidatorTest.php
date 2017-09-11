@@ -27,7 +27,7 @@ use Klarna\Rest\Transport\ResponseValidator;
 class ResponseValidatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var GuzzleHttp\Message\ResponseInterface
+     * @var Psr\Http\Message\ResponseInterface
      */
     protected $response;
 
@@ -41,7 +41,7 @@ class ResponseValidatorTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $interface = 'GuzzleHttp\Message\ResponseInterface';
+        $interface = 'Psr\Http\Message\ResponseInterface';
         $this->response = $this->getMockBuilder($interface)
             ->getMock();
 
@@ -66,8 +66,8 @@ class ResponseValidatorTest extends \PHPUnit_Framework_TestCase
     public function testGetJson()
     {
         $this->response->expects($this->once())
-            ->method('json')
-            ->will($this->returnValue('json response'));
+            ->method('getBody')
+            ->will($this->returnValue(json_encode('json response')));
 
         $this->assertEquals('json response', $this->validator->getJson());
     }
@@ -84,7 +84,7 @@ class ResponseValidatorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Location')
             ->will($this->returnValue('a location'));
 
@@ -123,7 +123,7 @@ class ResponseValidatorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue('text/plain'));
 
@@ -166,7 +166,7 @@ class ResponseValidatorTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue(true));
 
         $this->response->expects($this->once())
-            ->method('getHeader')
+            ->method('getHeaderLine')
             ->with('Content-Type')
             ->will($this->returnValue('text/plain'));
 

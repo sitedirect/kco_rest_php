@@ -21,8 +21,8 @@ namespace Klarna\Rest\Transport;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Message\ResponseInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Klarna\Rest\Transport\Exception\ConnectorException;
 
 /**
@@ -61,22 +61,9 @@ interface ConnectorInterface
      * @param string $method  HTTP method
      * @param array  $options Request options
      *
-     * @return RequestInterface
-     */
-    public function createRequest($url, $method = 'GET', array $options = []);
-
-    /**
-     * Sends the request.
-     *
-     * @param RequestInterface $request Request to send
-     *
-     * @throws ConnectorException If the API returned an error response
-     * @throws RequestException   When an error is encountered
-     * @throws \LogicException    When the adapter does not populate a response
-     *
      * @return ResponseInterface
      */
-    public function send(RequestInterface $request);
+    public function request($url, $method = 'GET', array $options = []);
 
     /**
      * Gets the HTTP transport client.

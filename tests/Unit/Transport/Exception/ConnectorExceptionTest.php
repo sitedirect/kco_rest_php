@@ -43,9 +43,9 @@ class ConnectorExceptionTest extends \PHPUnit_Framework_TestCase
             'correlation_id' => 'corr_id_1'
         ];
 
-        $request = $this->getMockBuilder('GuzzleHttp\Message\RequestInterface')
+        $request = $this->getMockBuilder('Psr\Http\Message\RequestInterface')
             ->getMock();
-        $response = $this->getMockBuilder('GuzzleHttp\Message\ResponseInterface')
+        $response = $this->getMockBuilder('Psr\Http\Message\ResponseInterface')
             ->getMock();
 
         $response->expects($this->once())

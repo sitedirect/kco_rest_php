@@ -22,8 +22,8 @@ namespace Klarna\Rest\Transport;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Message\ResponseInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Klarna\Rest\Transport\Exception\ConnectorException;
 
 /**
@@ -104,7 +104,7 @@ class Connector implements ConnectorInterface
         $options['auth'] = [$this->merchantId, $this->sharedSecret];
         $options['headers']['User-Agent'] = strval($this->userAgent);
 
-        return $this->client->request($method, $url, $options);
+        return $this->client->createRequest($method, $url, $options);
     }
 
     /**
@@ -118,10 +118,13 @@ class Connector implements ConnectorInterface
      *
      * @return ResponseInterface
      */
-    public function send(RequestInterface $request)
+    public function request($url, $method = 'GET', array $options = [])
     {
+        $options['auth'] = [$this->merchantId, $this->sharedSecret];
+        $options['headers']['User-Agent'] = strval($this->userAgent);
+
         try {
-            return $this->client->send($request);
+            return $this->client->request($method, $url, $options);
         } catch (RequestException $e) {
             if (!$e->hasResponse()) {
                 throw $e;
@@ -129,11 +132,14 @@ class Connector implements ConnectorInterface
 
             $response = $e->getResponse();
 
-            if ($response->getHeader('Content-Type') !== 'application/json') {
+            if ($response->getHeaderLine('Content-Type') !== 'application/json') {
                 throw $e;
             }
 
-            $data = $response->json();
+            $data = json_decode($response->getBody(), true);
+            if ($error = json_last_error() !== JSON_ERROR_NONE) {
+                throw new \RuntimeException('Unable to parse response body into JSON: ' . $error);
+            }
 
             if (!is_array($data) || !array_key_exists('error_code', $data)) {
                 throw $e;
@@ -179,7 +185,7 @@ class Connector implements ConnectorInterface
         $baseUrl = self::EU_BASE_URL,
         UserAgentInterface $userAgent = null
     ) {
-        $client = new Client(['base_url' => $baseUrl]);
+        $client = new Client(['base_uri' => $baseUrl]);
 
         return new static($client, $merchantId, $sharedSecret, $userAgent);
     }

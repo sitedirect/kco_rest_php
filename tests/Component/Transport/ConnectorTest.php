@@ -19,8 +19,8 @@
 
 namespace Klarna\Rest\Tests\Component\Transport;
 
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Psr7\Response;
 use Klarna\Rest\Transport\Connector;
 use Klarna\Rest\Tests\Component\TestCase;
 
@@ -30,54 +30,11 @@ use Klarna\Rest\Tests\Component\TestCase;
 class ConnectorTest extends TestCase
 {
     /**
-     * Make sure the request is created properly.
-     *
-     * @return void
-     */
-    public function testCreateRequest()
-    {
-        $request = $this->connector->createRequest(
-            'https://localhost:8888/path-here',
-            'POST',
-            ['query' => ['q' => '1']]
-        );
-
-        $this->assertInstanceOf('GuzzleHttp\Message\RequestInterface', $request);
-        $this->assertEquals('POST', $request->getMethod());
-        $this->assertEquals(
-            'https://localhost:8888/path-here?q=1',
-            $request->getUrl()
-        );
-
-        $this->assertEquals(self::MERCHANT_ID, $request->getConfig()['auth'][0]);
-        $this->assertEquals(self::SHARED_SECRET, $request->getConfig()['auth'][1]);
-
-        $this->assertEquals(
-            strval($this->connector->getUserAgent()),
-            $request->getHeader('User-Agent')
-        );
-    }
-
-    /**
-     * Make sure that the request sent returns an response.
-     *
-     * @return void
-     */
-    public function testSend()
-    {
-        $response = new Response(200);
-        $this->mock->addResponse($response);
-
-        $request = $this->connector->createRequest('http://somewhere/path', 'POST');
-        $this->assertSame($response, $this->connector->send($request));
-    }
-
-    /**
      * Make sure that an API error response throws a connector exception.
      *
      * @return void
      */
-    public function testSendError()
+    public function testRequestError()
     {
         $json = <<<JSON
 {
@@ -92,17 +49,16 @@ JSON;
         $response = new Response(
             500,
             ['Content-Type' => 'application/json'],
-            Stream::factory($json)
+            Psr7\stream_for($json)
         );
-        $this->mock->addResponse($response);
+        $this->mock->append($response);
 
         $this->setExpectedException(
             'Klarna\Rest\Transport\Exception\ConnectorException',
             'ERR_1: msg1, msg2 (#cid_1)'
         );
 
-        $request = $this->connector->createRequest('http://somewhere/path', 'POST');
-        $this->connector->send($request);
+        $this->connector->request('http://somewhere/path', 'POST');
     }
 
     /**
@@ -110,15 +66,14 @@ JSON;
      *
      * @return void
      */
-    public function testSendGuzzleError()
+    public function testRequestGuzzleError()
     {
         $response = new Response(404);
-        $this->mock->addResponse($response);
+        $this->mock->append($response);
 
         $this->setExpectedException('GuzzleHttp\Exception\ClientException');
 
-        $request = $this->connector->createRequest('http://somewhere/path', 'POST');
-        $this->connector->send($request);
+        $this->connector->request('http://somewhere/path', 'POST');
     }
 
     /**
@@ -139,6 +94,5 @@ JSON;
         );
 
         $this->assertSame($userAgent, $connector->getUserAgent());
-        $this->assertEquals(self::BASE_URL, $connector->getClient()->getBaseUrl());
     }
 }
